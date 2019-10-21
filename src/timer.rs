@@ -77,6 +77,37 @@ pub trait CountDown {
     fn wait(&mut self) -> nb::Result<(), Void>;
 }
 
+/// A monotonic timer
+///
+/// # Examples
+///
+/// You can use this timer to monitor the passage of time
+///
+/// ```
+/// let mut timer: Monotonic = Timer::monotonic_tim1(p.TIM1, &mut rcc);
+///
+/// timer.start(1.s());
+/// hprintln!("time is now {}", timer.get()).unwrap();
+/// delay.delay_ms(500_u16);
+/// hprintln!("time is now {}", timer.get()).unwrap();
+/// timer.reset();
+///
+pub trait Monotonic<R> {
+    /// The unit of time used by this timer
+    type Time;
+
+    /// Starts a new counter with the given frequency
+    fn start<T>(&mut self, frequency: T)
+        where
+            T: Into<Self::Time>;
+
+    /// Gets the current timer value
+    fn get(&self) -> R;
+
+    /// Resets the timer to zero
+    fn reset(&mut self);
+}
+
 /// Marker trait that indicates that a timer is periodic
 pub trait Periodic {}
 
